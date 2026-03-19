@@ -1,68 +1,86 @@
-# Main content
+# Step 2 - Create Gateway and Sandbox
 
-## Another section heading
+## What is the Gateway?
 
-Phasellus consequat vitae enim non ultricies. Quisque sed hendrerit libero. 
+The **Gateway** is OpenShell's control plane. It runs as a K3s Kubernetes
+cluster inside a single Docker container and manages:
 
-Nunc in faucibus neque. Ut feugiat vulputate nisl, at iaculis urna malesuada in. 
+- Sandbox lifecycle
+- Credential providers
+- Policy distribution
+- The Privacy Router for inference
 
-
-
-## Code blocks
-
-**Both run and copy buttons:**
+## Start the Gateway
 
 ```bash
-docker ps
+openshell gateway start
 ```
 
-**No run button:**
+This pulls the gateway image and initializes the K3s cluster. It takes about
+60-90 seconds on first run.
 
-```bash no-run-button
-docker ps
+When complete you'll see:
+
+```
+✓ Gateway ready
+  Name: openshell
+  Endpoint: https://127.0.0.1:8080
 ```
 
-**No buttons:**
+## Verify the Gateway is Healthy
 
-```bash no-run-button no-copy-button
-docker ps
+```bash
+openshell gateway info
 ```
 
-Aenean tincidunt consectetur magna, ac fringilla risus dictum non.
+## Set Up Your NVIDIA NIM Provider
 
+Before creating a sandbox, configure your NVIDIA API key as a credential
+provider. Get your free key at [build.nvidia.com](https://build.nvidia.com):
 
-
-## Save a file
-
-This block will provide a "Save file" button, which will create a file named `lorem-ipsum.txt`.
-
-```plaintext save-as=lorem-ipsum.txt
-Nulla eget nisl odio. Vestibulum enim nibh, varius id venenatis euismod, lacinia a ipsum. Suspendisse potenti. Morbi semper tortor quis magna consequat viverra. Nulla pretium, ligula ut consectetur tempor, tellus enim bibendum ex, eget sagittis massa metus at quam. Interdum et malesuada fames ac ante ipsum primis in faucibus
+```bash
+openshell provider create \
+  --name nvidia-nim \
+  --type nvidia \
+  --credential NGC_API_KEY=nvapi-YOUR-KEY-HERE
 ```
 
+Verify it was created:
 
-## Links
+```bash
+openshell provider list
+```
 
-[This link](https://hub.docker.com) goes to Docker Hub that will open in a new browser tab
+## Create Your Sandbox
 
-:tabLink[This link]{href="http://localhost:3000" title="Web app"} will go to localhost:3000 (which obviously won't run right now), but open in a new tab here in the interface.
+Create a sandbox with Codex as the agent:
 
+```bash
+openshell provider create \
+  --name codex \
+  --type codex \
+  --credential OPENAI_API_KEY=sk-YOUR-KEY-HERE
 
+openshell sandbox create --provider codex -- codex
+```
 
-## Custom variables
+Wait for the sandbox image to pull and start:
 
-Labspaces provide the ability for an author to request a value for a variable and then have that value be replaced in both interface display and interactive elements (code execution, file saving, etc.)
+```
+✓ Sandbox allocated
+✓ Image pulled
+✓ Sandbox ready
+```
 
-To define a variable, use the `::variableDefinition` directive. The portion inside the square brackets defines the name of the variable and the `prompt` is used in the request to the user.
+## List Your Sandboxes
 
-As an example, the following directive usage will create a variable named `username` after prompting the user "What is your Docker username?"
+```bash
+openshell sandbox list
+```
 
-    ::variableDefinition[username]{prompt="What is your Docker username?"}
+Note the sandbox name — you'll use it in the next steps. It will be something
+like `happy-dolphin` or `swift-falcon`.
 
-To use the variable, wrap the variable with `$$`. For example, the following would display the previously defined variable:
-
-    ```bash
-    docker build -t $$username$$/my-first-website .
-    ```
-
-If the variable has no value, the displayed value reverts to displaying the name of the variable.
+> **What just happened?** OpenShell created an isolated container with
+> policy-enforced egress routing. The Codex agent is running inside it,
+> but ALL outbound network traffic is blocked by default until you apply a policy.
