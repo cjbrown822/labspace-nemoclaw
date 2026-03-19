@@ -28,6 +28,13 @@ NemoClaw is NVIDIA's agent plugin for OpenShell that adds Nemotron model
 support and the NemoClaw agent harness:
 
 ```bash
+# Fix npm global prefix BEFORE running NemoClaw install
+mkdir -p ~/.npm-global
+npm config set prefix ~/.npm-global
+export PATH="~/.npm-global/bin:$PATH"
+
+# Then install NemoClaw
+curl -LsSf https://raw.githubusercontent.com/NVIDIA/NemoClaw/main/install.sh | bash
 curl -LsSf https://raw.githubusercontent.com/NVIDIA/NemoClaw/main/install.sh | bash
 ```
 
