@@ -13,6 +13,7 @@ Reload your shell to pick up the new PATH:
 
 ```bash
 source ~/.bashrc
+export PATH="/home/coder/.local/bin:$PATH"
 ```
 
 Verify the installation:
