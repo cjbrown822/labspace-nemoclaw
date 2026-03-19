@@ -1,25 +1,15 @@
-metadata:
-  id: ajeetraina/labspace-nemoclaw
-  sourceRepo: github.com/ajeetraina/labspace-nemoclaw
-  contentVersion: abcd123 # Will be filled in during CI
-
-title: Labspace starter
+title: Running NVIDIA NemoClaw on OpenShell with Nemotron Inference
 description: |
-  A basic template for creating a Labspace, including all of the boilerplate needed to write and publish a Labspace.
-
-sections:
-  - title: Introduction
-    contentPath: 01-introduction.md
-  - title: Main Content 1
-    contentPath: 02-main-content.md
-  - title: Conclusion
-    contentPath: 03-conclusion.md
-
-# Services are used to add default tabs in the Labspace interface.
-# The IDE will always be present as a service, but you can add additional services as needed.
-# Icon values come from https://fonts.google.com/icons/
-services:
-  - id: app
-    url: http://localhost:3000
-    title: App
-    icon: anchor
+  Learn how to set up NVIDIA NemoClaw inside an OpenShell sandbox on Linux,
+  configure Nemotron-3-Nano inference via NVIDIA NIM, apply declarative YAML
+  policies, and run an AI agent securely with policy-enforced egress.
+cover: cover.png
+difficulty: intermediate
+duration: 30
+tags:
+  - nvidia
+  - nemoclaw
+  - openshell
+  - nemotron
+  - ai-agents
+  - docker
