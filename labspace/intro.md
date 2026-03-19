@@ -49,26 +49,3 @@ Verify NemoClaw:
 nemoclaw --version
 ```
 
-## Verify Docker is Running
-
-OpenShell requires Docker. Confirm it's available:
-
-```bash
-docker info | grep -E "Server Version|Operating System"
-```
-
-You should see the Docker server version and Linux as the OS.
-
-## Run the NemoClaw Doctor
-
-NemoClaw includes a built-in diagnostic tool:
-
-```bash
-nemoclaw doctor
-```
-
-This checks that all dependencies are installed and working correctly. Fix any
-issues it reports before proceeding.
-
-> **Tip:** If `nemoclaw` is not found after install, run
-> `export PATH="$HOME/.local/bin:$PATH"` and try again.
