@@ -1,48 +1,47 @@
-# Labspace starter
+# Running NVIDIA NemoClaw on OpenShell with Nemotron Inference
 
-This repository is intended to server as a template to help bootstrap a new Labspace.
+## Welcome!
 
-## Instructions
+In this lab, you will set up **NVIDIA NemoClaw** — a safe, private runtime for
+autonomous AI agents — on a Linux instance and connect it to **Nemotron-3-Nano**
+inference via NVIDIA NIM.
 
-1. Create a new repository using this repo as the template ([docs here](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template)).
+## What You'll Build
 
-    **NOTE:** After creating the repo, a GHA workflow will run to do some additional bootstrapping. The bootstrapping workflow file will be removed during bootstrapping.
+```
+AI Agent (Codex)
+    ↓
+OpenShell Sandbox (policy-enforced egress)
+    ↓ inference.local
+Privacy Router (credential stripping)
+    ↓
+NVIDIA NIM Cloud API
+    ↓
+Nemotron-3-Nano 30B (thinking model)
+```
 
-2. Clone your newly created repo to your local machine
+## What You'll Learn
 
-3. Start the local development mode:
+- Install OpenShell and NemoClaw on Linux
+- Create a gateway and sandbox
+- Configure NVIDIA NIM as an inference provider
+- Apply declarative YAML network policies
+- Test Nemotron inference from inside a sandboxed environment
+- Run Codex agent inside a secure sandbox
 
-    ```bash
-    # On Mac/Linux
-    CONTENT_PATH=$PWD docker compose up --watch
+## Prerequisites
 
-    # On Windows with PowerShell
-    $Env:CONTENT_PATH = (Get-Location).Path; docker compose up --watch
-    ```
+- A free NVIDIA API key from [build.nvidia.com](https://build.nvidia.com)
+- An OpenAI API key (for Codex agent)
+- Basic familiarity with the command line
 
-4. Update the `labspace/labspace.yaml` with your Labspace's title and description
+> **Note:** This lab runs on Linux where all OpenShell features work correctly.
+> If you're on macOS/Apple Silicon, some features (local Ollama inference,
+> Docker Model Runner bridge) are not yet supported — see
+> [NemoClaw issue #260](https://github.com/NVIDIA/NemoClaw/issues/260).
 
-5. Write your Labspace! Being in dev mode, your changes should be visible in the interface without a restart. Feel free to edit either on your host machine or in the Labspace itself!
+## Time to Complete
 
-    Add any supporting application files or resources directly into the Labspace. This repo will be cloned into the Labspace at startup.
+~30 minutes
 
-    Be sure to check out the [docs](https://github.com/dockersamples/labspace-infra/tree/main/docs) for additional information and guidelines.
-
-
-
-### Setting up the deployment pipeline
-
-The template repo contains a workflow file to make it easy to publish your Labspace.
-
-1. Add GitHub Action Secrets in your new repo for the following:
-
-    - `DOCKERHUB_USERNAME` - the username to authenticate to Docker Hub with
-    - `DOCKERHUB_TOKEN` - a personal or organization access token to use for authentication
-
-2. In the `.github/workflows/publish-labspace.yaml.temp` file, update the `DOCKERHUB_REPO` with the name of the Docker Hub repo you want to publish to.
-
-3. Rename the workflow file to remove the `.temp` extension.
-
-    ```bash
-    mv .github/workflows/publish-labspace.yaml.temp .github/workflows/publish-labspace.yaml
-    ```
+Let's get started! 🚀
