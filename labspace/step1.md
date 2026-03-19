@@ -1,86 +1,94 @@
-# Step 2 - Create Gateway and Sandbox
+# Step 1 - Install OpenShell and NemoClaw
 
-## What is the Gateway?
+## Install OpenShell
 
-The **Gateway** is OpenShell's control plane. It runs as a K3s Kubernetes
-cluster inside a single Docker container and manages:
-
-- Sandbox lifecycle
-- Credential providers
-- Policy distribution
-- The Privacy Router for inference
-
-## Start the Gateway
-
+OpenShell is the safe, private runtime for autonomous AI agents. Install it
+using the official install script:
 ```bash
-openshell gateway start
+curl -LsSf https://raw.githubusercontent.com/NVIDIA/OpenShell/main/install.sh | bash
 ```
 
-This pulls the gateway image and initializes the K3s cluster. It takes about
-60-90 seconds on first run.
-
-When complete you'll see:
-
-```
-✓ Gateway ready
-  Name: openshell
-  Endpoint: https://127.0.0.1:8080
-```
-
-## Verify the Gateway is Healthy
-
+Add OpenShell to your PATH:
 ```bash
-openshell gateway info
+export PATH="/home/coder/.local/bin:$PATH"
+echo 'export PATH="/home/coder/.local/bin:$PATH"' >> ~/.bashrc
 ```
 
-## Set Up Your NVIDIA NIM Provider
-
-Before creating a sandbox, configure your NVIDIA API key as a credential
-provider. Get your free key at [build.nvidia.com](https://build.nvidia.com):
-
+Verify the installation:
 ```bash
-openshell provider create \
-  --name nvidia-nim \
-  --type nvidia \
-  --credential NGC_API_KEY=nvapi-YOUR-KEY-HERE
+openshell --version
 ```
 
-Verify it was created:
+You should see `openshell 0.0.10` or later.
 
+## Install NemoClaw
+
+NemoClaw is NVIDIA's agent plugin for OpenShell. Before installing, configure
+npm to install packages without root permissions:
 ```bash
-openshell provider list
+mkdir -p ~/.npm-global
+npm config set prefix ~/.npm-global
+export PATH="$HOME/.npm-global/bin:$PATH"
+echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> ~/.bashrc
 ```
 
-## Create Your Sandbox
-
-Create a sandbox with Codex as the agent:
-
+Now install NemoClaw:
 ```bash
-openshell provider create \
-  --name codex \
-  --type codex \
-  --credential OPENAI_API_KEY=sk-YOUR-KEY-HERE
-
-openshell sandbox create --provider codex -- codex
+curl -LsSf https://raw.githubusercontent.com/NVIDIA/NemoClaw/main/install.sh | bash
 ```
 
-Wait for the sandbox image to pull and start:
-
-```
-✓ Sandbox allocated
-✓ Image pulled
-✓ Sandbox ready
-```
-
-## List Your Sandboxes
-
+Reload your shell:
 ```bash
-openshell sandbox list
+source ~/.bashrc
 ```
 
-Note the sandbox name — you'll use it in the next steps. It will be something
-like `happy-dolphin` or `swift-falcon`.
+Verify NemoClaw is installed:
+```bash
+nemoclaw help
+```
 
-> **What just happened?** OpenShell created an isolated container with
-> policy-enforced egress routing. The Codex agent is running inside it,
-> but ALL outbound network traffic is blocked by default until you apply a policy.
+You should see the NemoClaw command list including `onboard`, `list`, `connect` and more.
+
+> **Note:** `nemoclaw --version` is not a valid command. Use `nemoclaw help` to see all available commands.
+
+## Run the Onboarding Wizard
+
+NemoClaw includes an interactive setup wizard that handles everything in one go:
+```bash
+nemoclaw onboard
+```
+
+The wizard runs through 7 steps:
+
+1. **Preflight checks** — verifies Docker, openshell, and port availability
+2. **Start OpenShell gateway** — deploys K3s inside Docker (~60-90 seconds)
+3. **Create sandbox** — enter a name like `collabnix`
+4. **Configure inference** — choose NVIDIA Cloud API (option 1)
+5. **Set up inference provider** — enter your `nvapi-` key
+6. **Set up OpenClaw inside sandbox** — installs the agent
+7. **Apply policy presets** — select `pypi` and `npm` (suggested defaults)
+
+> ⚠️ **When prompted for a sandbox name**, type only the name (e.g. `collabnix`).
+> Do not paste other commands — the prompt is waiting for input only.
+
+> ⚠️ **If you see "Port 8080 is not available"**, a previous gateway is still
+> running. Fix it with:
+> ```bash
+> openshell gateway stop
+> nemoclaw onboard
+> ```
+
+> 💡 Have your `nvapi-` key from [build.nvidia.com](https://build.nvidia.com)
+> ready before starting — you'll need it at step 4.
+
+Once onboarding completes you'll see:
+```
+=== Installation complete ===
+Sandbox      collabnix (Landlock + seccomp + netns)
+Model        nvidia/nemotron-3-super-120b-a12b (NVIDIA Cloud API)
+```
+
+Connect to your sandbox:
+```bash
+nemoclaw collabnix connect
+```
