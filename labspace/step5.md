@@ -12,7 +12,7 @@ Send a request to `inference.local` — the Privacy Router will intercept it,
 inject your NVIDIA NIM credentials, and forward to Nemotron-3-Nano:
 
 ```bash
-curl http://inference.local/v1/chat/completions \
+curl https://inference.local/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
     "model": "nvidia/nemotron-3-nano-30b-a3b",
@@ -27,7 +27,7 @@ You should get a JSON response with Nemotron's reply including a `thinking` bloc
 ## Test with Streaming
 
 ```bash
-curl http://inference.local/v1/chat/completions \
+curl https://inference.local/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
     "model": "nvidia/nemotron-3-nano-30b-a3b",
@@ -43,7 +43,7 @@ curl http://inference.local/v1/chat/completions \
 Nemotron supports function calling. Try this:
 
 ```bash
-curl http://inference.local/v1/chat/completions \
+curl https://inference.local/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
     "model": "nvidia/nemotron-3-nano-30b-a3b",
@@ -71,7 +71,7 @@ curl http://inference.local/v1/chat/completions \
 ## List Available Models
 
 ```bash
-curl http://inference.local/v1/models
+curl https://inference.local/v1/models
 ```
 
 ## Verify Privacy Router is Working
@@ -81,7 +81,7 @@ Notice that your request to `inference.local` never included your NVIDIA API key
 
 ```bash
 # This should work (Privacy Router adds the key)
-curl http://inference.local/v1/models
+curl https://inference.local/v1/models
 
 # This would fail if you called NVIDIA directly without a key
 # curl https://integrate.api.nvidia.com/v1/models  ← would return 401
