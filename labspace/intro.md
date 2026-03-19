@@ -1,51 +1,36 @@
-# Step 1 - Install OpenShell and NemoClaw
+# Running NVIDIA NemoClaw on OpenShell with Nemotron Inference
 
-## Install OpenShell
+## Welcome!
 
-OpenShell is the safe, private runtime for autonomous AI agents. Install it
-using the official install script:
+In this lab you will set up **NVIDIA NemoClaw** on Linux and connect it to
+**Nemotron-3-Super-120B** inference via NVIDIA NIM.
 
-```bash
-curl -LsSf https://raw.githubusercontent.com/NVIDIA/OpenShell/main/install.sh | sh
+## What You'll Build
+```
+AI Agent (OpenClaw)
+    ↓
+OpenShell Sandbox (policy-enforced egress)
+    ↓ https://inference.local
+Privacy Router (credential stripping)
+    ↓
+NVIDIA NIM Cloud API → Nemotron-3-Super-120B
 ```
 
-Reload your shell to pick up the new PATH:
+## What You'll Learn
 
-```bash
-source ~/.bashrc
-export PATH="/home/coder/.local/bin:$PATH"
-```
+- Install OpenShell and NemoClaw on Linux
+- Create a gateway and sandbox with `nemoclaw onboard`
+- Configure NVIDIA NIM inference
+- Apply and hot-reload YAML network policies
+- Test Nemotron inference from inside the sandbox
 
-Verify the installation:
+## Prerequisites
 
-```bash
-openshell --version
-```
+- A free NVIDIA API key from [build.nvidia.com](https://build.nvidia.com)
+- Basic familiarity with the command line
 
-## Install NemoClaw
+> **Note:** Use `https://inference.local` (not `http://`) — the proxy uses TLS on port 443.
 
-NemoClaw is NVIDIA's agent plugin for OpenShell that adds Nemotron model
-support and the NemoClaw agent harness:
+## Time to Complete
 
-```bash
-# Fix npm global prefix BEFORE running NemoClaw install
-mkdir -p ~/.npm-global
-npm config set prefix ~/.npm-global
-export PATH="~/.npm-global/bin:$PATH"
-
-# Then install NemoClaw
-curl -LsSf https://raw.githubusercontent.com/NVIDIA/NemoClaw/main/install.sh | bash
-```
-
-Reload your shell again:
-
-```bash
-source ~/.bashrc
-```
-
-Verify NemoClaw:
-
-```bash
-nemoclaw --version
-```
-
+~30 minutes
