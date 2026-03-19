@@ -1,15 +1,34 @@
+metadata:
+  id: ajeetraina/labspace-nemoclaw
+  sourceRepo: github.com/ajeetraina/labspace-nemoclaw
+  contentVersion: abcd123 # Will be filled in during CI
+
 title: Running NVIDIA NemoClaw on OpenShell with Nemotron Inference
 description: |
   Learn how to set up NVIDIA NemoClaw inside an OpenShell sandbox on Linux,
   configure Nemotron-3-Nano inference via NVIDIA NIM, apply declarative YAML
   policies, and run an AI agent securely with policy-enforced egress.
-cover: cover.png
-difficulty: intermediate
-duration: 30
-tags:
-  - nvidia
-  - nemoclaw
-  - openshell
-  - nemotron
-  - ai-agents
-  - docker
+
+sections:
+  - title: Introduction
+    contentPath: intro.md
+  - title: Install OpenShell & NemoClaw
+    contentPath: step1.md
+  - title: Create Gateway & Sandbox
+    contentPath: step2.md
+  - title: Configure Nemotron Inference
+    contentPath: step3.md
+  - title: Apply Network Policy
+    contentPath: step4.md
+  - title: Test Nemotron Inference
+    contentPath: step5.md
+  - title: Run Codex Agent
+    contentPath: step6.md
+  - title: Conclusion
+    contentPath: conclusion.md
+
+services:
+  - id: app
+    url: http://localhost:3000
+    title: App
+    icon: anchor
