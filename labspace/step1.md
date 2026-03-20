@@ -82,6 +82,7 @@ The wizard runs through 7 steps:
 > ready before starting — you'll need it at step 4.
 
 Once onboarding completes you'll see:
+
 ```
 === Installation complete ===
 Sandbox      collabnix (Landlock + seccomp + netns)
@@ -95,7 +96,7 @@ nemoclaw collabnix connect
 
 Testing the inference:
 
-```
+```bash
 curl https://inference.local/v1/chat/completions \
    -H "Content-Type: application/json" \
    -d '{"model":"nvidia/nemotron-3-super-120b-a12b","messages":[{"role":"user","content":"hello, who are you?"}]}'
