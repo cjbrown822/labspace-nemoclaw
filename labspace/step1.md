@@ -1,4 +1,4 @@
-# Step 1 - Install NemoClaw
+# Install NemoClaw
 
 NemoClaw is NVIDIA's agent plugin for OpenShell. Before installing, configure
 npm to install packages without root permissions:
