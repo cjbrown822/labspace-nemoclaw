@@ -1,15 +1,22 @@
-# Step 5 - Test Nemotron Inference
+# Step 6 - Test Nemotron Inference
 
 ## Connect to the Sandbox
 
+Before running any inference commands, you must be **inside** the sandbox —
+`inference.local` is a virtual hostname that only resolves within the
+sandbox network namespace.
+
 ```bash
-openshell sandbox connect <your-sandbox-name>
+openshell sandbox connect collabnix
 ```
+
+Your prompt should change to `sandbox@collabnix:~$`. If it still shows your
+host shell (e.g. `coder@...`), the next commands will not work.
 
 ## Test Basic Inference
 
 Send a request to `inference.local` — the Privacy Router will intercept it,
-inject your NVIDIA NIM credentials, and forward to Nemotron-3-Nano:
+inject your NVIDIA NIM credentials, and forward to Nemotron:
 
 ```bash
 curl http://inference.local/v1/chat/completions \
@@ -22,7 +29,14 @@ curl http://inference.local/v1/chat/completions \
   }'
 ```
 
-You should get a JSON response with Nemotron's reply including a `thinking` block!
+You should get a JSON response with Nemotron's reply including a
+`reasoning_content` field (Nemotron 3's exposed chain of thought).
+
+> **Note on the response `model` field:** You may see the response come back
+> from `nvidia/nemotron-3-super-120b-a12b` even though you requested
+> `nemotron-3-nano-30b-a3b`. This is the Privacy Router honouring the
+> **operator-configured** model (set via `openshell inference set`) rather
+> than the caller's requested model. The agent asks; the operator decides.
 
 ## Test with Streaming
 
@@ -76,23 +90,22 @@ curl http://inference.local/v1/models
 
 ## Verify Privacy Router is Working
 
-Notice that your request to `inference.local` never included your NVIDIA API key
-— the Privacy Router injected it automatically. Try confirming this:
+Notice that your request to `inference.local` never included an NVIDIA API key
+— the Privacy Router injected it automatically at the proxy layer. The key
+never entered the sandbox filesystem.
 
 ```bash
-# This should work (Privacy Router adds the key)
+# This works — Privacy Router adds the key
 curl http://inference.local/v1/models
-
-# This would fail if you called NVIDIA directly without a key
-# curl https://integrate.api.nvidia.com/v1/models  ← would return 401
 ```
 
-> **What just happened?** Your request went:
-> Sandbox → Egress Proxy → Policy Engine (allow) → Privacy Router (inject key) → NVIDIA NIM → Nemotron-3-Nano → back to you
+> **What just happened?**
+>
+> `Sandbox → Egress Proxy → Policy Engine (allow) → Privacy Router (inject key) → NVIDIA NIM → Nemotron → back to you`
 >
 > Your API key never touched the sandbox filesystem. 🔐
 
-Exit the sandbox when done:
+## Exit the Sandbox
 
 ```bash
 exit
